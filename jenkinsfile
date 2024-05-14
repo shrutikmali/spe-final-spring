@@ -36,7 +36,7 @@ pipeline {
             steps {
                 script{
                     docker.withRegistry('', 'DockerHubCred') {
-                    sh "docker tag ${DOCKER_IMAGE_NAME} shrutik15/spe-mini-project"
+                    sh "docker tag ${DOCKER_IMAGE_NAME} shrutik15/spe-final-springboot"
                     sh "docker push shrutik15/${DOCKER_IMAGE_NAME}"
                     }
                 }
