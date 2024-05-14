@@ -16,7 +16,7 @@ import com.example.demo.models.Response;
 @Service
 public class Services {
 
-    public final String FLASK_SERVER = "http://handwriting-recogniser-flask.com";
+    public final String FLASK_SERVER = "http://192.168.49.2:32000";
 
     Logger logger = LoggerFactory.getLogger(Services.class);
     
