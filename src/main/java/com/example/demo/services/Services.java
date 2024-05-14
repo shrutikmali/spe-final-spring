@@ -40,7 +40,7 @@ public class Services {
             logger.error("Error in Services->getText: " + e.getLocalizedMessage());
             logger.error(e.getMessage());
             Response error = new Response();
-            error.setText("An error occurred");
+            error.setText("An error occurred: " + e.getMessage());
             return error;
         }
     }
