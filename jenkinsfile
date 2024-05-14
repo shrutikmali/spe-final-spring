@@ -1,0 +1,65 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE_NAME = 'spe-final-springboot'
+        GITHUB_REPO_URL = 'https://github.com/shrutikmali/spe-final-spring'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    git branch: 'main', url: "${GITHUB_REPO_URL}"
+                }
+            }
+        }
+
+        stage('Compile project') {
+            steps {
+                script {
+                    withMaven(maven: 'maven') {
+                        sh "mvn package"
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build("${DOCKER_IMAGE_NAME}", '.')
+                }
+            }
+        }
+        stage('Push Docker Images') {
+            steps {
+                script{
+                    docker.withRegistry('', 'DockerHubCred') {
+                    sh "docker tag ${DOCKER_IMAGE_NAME} shrutik15/spe-mini-project"
+                    sh "docker push shrutik15/${DOCKER_IMAGE_NAME}"
+                    }
+                }
+            }
+        }
+        stage('Run Ansible Playbook') {
+            steps {
+                script {
+                    ansiblePlaybook(
+                        playbook: 'deploy.yml',
+                        inventory: 'inventory'
+                     )
+                }
+            }
+        }
+    }
+
+    // post {
+    //     success {
+    //         emailext body: '', subject: 'Build success', to: 'shrutik.mali@iiitb.ac.in'
+    //     }
+    //     failure {
+    //         emailext body: '', subject: 'Build failed', to: 'shrutik.mali@iiitb.ac.in'
+    //     }
+    // }
+}
