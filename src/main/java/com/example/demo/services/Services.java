@@ -40,7 +40,8 @@ public class Services {
         }
         catch (Exception e) {
             logger.error("Error in Services->getText: " + e.getLocalizedMessage());
-            logger.error(e.getMessage());
+            e.printStackTrace();
+	    logger.error(e.getMessage());
             Response error = new Response();
             error.setText("An error occurred: " + e.getMessage());
             return error;
