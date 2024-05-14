@@ -23,6 +23,8 @@ public class Services {
     public Response getText(Request request) {
         logger.info("Called Services->getText");
         WebClient webClient = WebClient.create();
+	String url = FLASK_SERVER + "/recognise";
+	logger.info("Making request to: " + url);
 
         try {
             Response res = webClient
