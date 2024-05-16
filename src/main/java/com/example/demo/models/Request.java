@@ -12,4 +12,5 @@ import lombok.ToString;
 public class Request {
     private String id;
     private String img;
+    private Boolean saveImage;
 }
