@@ -10,6 +10,18 @@
     - name: Print kube-config
       command: cat ~/.kube/config
       register: cat_output
+    - name: Apply persistent volume
+      k8s:
+        kubeconfig: '~/.kube/config'
+        state: present
+        namespace: default
+        src: kubernetes/springboot-pv.yaml
+    - name: Apply persistent volume claim
+      k8s:
+        kubeconfig: '~/.kube/config'
+        state: present
+        namespace: default
+        src: kubernetes/springboot-pvc.yaml
     - name: Apply deployment
       k8s:
         kubeconfig: '~/.kube/config'
@@ -28,15 +40,3 @@
         state: present
         namespace: default
         src: kubernetes/springboot-networking.yaml
-    - name: Apply persistent volume
-      k8s:
-        kubeconfig: '~/.kube/config'
-        state: present
-        namespace: default
-        src: kubernetes/springboot-pv.yaml
-    - name: Apply persistent volume claim
-      k8s:
-        kubeconfig: '~/.kube/config'
-        state: present
-        namespace: default
-        src: kubernetes/springboot-pvc.yaml
