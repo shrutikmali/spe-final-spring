@@ -16,3 +16,10 @@ spec:
           image: shrutik15/spe-final-springboot:latest
           ports:
           - containerPort: 5000
+          volumeMounts:
+          - name: image-volume
+            mountPath: /mnt/data
+      volumes:
+      - name: image-volume
+        persistentVolumeClaim:
+          claimName: image-volume-pvc
