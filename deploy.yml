@@ -1,0 +1,30 @@
+---
+- name: Apply changes to kubernetes
+  hosts: localhost
+  remote_user: ansible
+  become: false
+  tasks:
+    - name: Print the working directory from where the playbook was run
+      debug:
+        msg: "Playbook was executed from: {{ ansible_env.PWD }} with user {{ ansible_user}}"
+    - name: Print kube-config
+      command: cat ~/.kube/config
+      register: cat_output
+    - name: Apply deployment
+      k8s:
+        kubeconfig: '~/.kube/config'
+        state: present
+        namespace: default
+        src: kubernetes/springboot-deployment.yaml
+    - name: Apply service
+      k8s:
+        kubeconfig: '~/.kube/config'
+        state: present
+        namespace: default
+        src: kubernetes/springboot-service.yaml
+    - name: Apply networking
+      k8s:
+        kubeconfig: '~/.kube/config'
+        state: present
+        namespace: default
+        src: kubernetes/springboot-networking.yaml
