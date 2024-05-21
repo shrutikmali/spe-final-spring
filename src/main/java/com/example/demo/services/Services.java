@@ -35,6 +35,31 @@ public class Services {
         WebClient webClient = WebClient.create();
         String url = FLASK_SERVER + "/recognise";
         if(request.getSaveImage()) {
+            this.saveImage(request);
+        }
+        try {
+            logger.info("Making request to: " + url);
+            Response res = webClient
+            .post()
+            .uri(new URI(FLASK_SERVER + "/recognise"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(request)
+            .retrieve()
+            .bodyToMono(Response.class)
+            .block();
+
+            return res;
+        }
+        catch (Exception e) {
+            logger.error("Error occurred in Services->getText", e);
+            Response error = new Response();
+            error.setText("An error occurred: " + e.getMessage());
+            return error;
+        }
+    }
+
+    public boolean saveImage(Request request) {
+        try {
             String base64String[] = request.getImg().split(",");
             String extension;
             switch (base64String[0]) {
@@ -51,37 +76,21 @@ public class Services {
             byte data[] = Base64.getDecoder().decode(base64String[1]);
             String name = UUID.randomUUID().toString() + extension;
             File file = new File(path + "/" + name);
-            try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
-                logger.info("Writing file: " + file.getAbsolutePath());
-                outputStream.write(data);
-                logger.info("File saved successfully");
-            } 
-            catch (IOException e) {
-                e.printStackTrace();
-                logger.error("Error in storing file");
-            }
-        }
-        try {
-            logger.info("Making request to: " + url);
-            Response res = webClient
-            .post()
-            .uri(new URI(FLASK_SERVER + "/recognise"))
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(request)
-            .retrieve()
-            .bodyToMono(Response.class)
-            .block();
-
-            return res;
+            OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
+            logger.info("Writing file: " + file.getAbsolutePath());
+            outputStream.write(data);
+            logger.info("File saved successfully");
+            outputStream.close();
+            return true;
+        } 
+        catch (IOException e) {
+            e.printStackTrace();
+            logger.error("Error in Services->saveImage: ", e);
+            return false;
         }
         catch (Exception e) {
-            logger.error("Error in Services->getText: " + e.getLocalizedMessage());
-            e.printStackTrace();
-	    logger.error(e.getMessage());
-            Response error = new Response();
-            error.setText("An error occurred: " + e.getMessage());
-            return error;
+            logger.error("Error occurred in Services->saveImage", e);
+            return false;
         }
     }
-
 }
