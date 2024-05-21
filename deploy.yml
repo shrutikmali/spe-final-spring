@@ -40,3 +40,9 @@
         state: present
         namespace: default
         src: kubernetes/springboot-networking.yaml
+    - name: Apply networking
+      k8s:
+        kubeconfig: '~/.kube/config'
+        state: present
+        namespace: default
+        src: kubernetes/springboot-hpa.yaml
