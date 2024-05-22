@@ -54,12 +54,12 @@ pipeline {
         }
     }
 
-    // post {
-    //     success {
-    //         emailext body: '', subject: 'Build success', to: 'shrutik.mali@iiitb.ac.in'
-    //     }
-    //     failure {
-    //         emailext body: '', subject: 'Build failed', to: 'shrutik.mali@iiitb.ac.in'
-    //     }
-    // }
+    post {
+        success {
+            emailext body: '', subject: 'Build success', to: 'shrutik.mali@iiitb.ac.in'
+        }
+        failure {
+            emailext body: '', subject: 'Build failed', to: 'shrutik.mali@iiitb.ac.in'
+        }
+    }
 }
